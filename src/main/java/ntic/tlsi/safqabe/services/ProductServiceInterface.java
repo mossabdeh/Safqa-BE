@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProductServiceInterface {
-    Product addProduct(Product product , Set<ProductItem> items , Long supplierId);
+    Product addProduct(Product product , Set<ProductItem> items , Long supplierId , Long categoryId);
     ProductItem addProductItem(Long productId, ProductItem item);
     List<Product> listProducts();
 

@@ -4,6 +4,7 @@ import ntic.tlsi.safqabe.entities.*;
 import ntic.tlsi.safqabe.enums.ProductOption;
 import ntic.tlsi.safqabe.enums.RoleAdmin;
 import ntic.tlsi.safqabe.repositories.AdressRepository;
+import ntic.tlsi.safqabe.repositories.CategoryRepository;
 import ntic.tlsi.safqabe.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class DataInitializer {
     @Bean
     CommandLineRunner initData(ProductServiceImpl productService , AdminServiceImpl adminService , ClientServiceImpl clientService,
-                               SupplierServiceImpl supplierService , AdressRepository adressRepository) {
+                               SupplierServiceImpl supplierService , AdressRepository adressRepository , CategoryRepository categoryRepository) {
         return args -> {
             // create some users
             adminService.saveAdmin(
@@ -28,7 +29,9 @@ public class DataInitializer {
 
             // create address
             Adress adress = adressRepository.save(new Adress(null, "Constaintine", "el khroub", 25001L, "b test1 test2", ""));
-
+            // create category
+            Category category = categoryRepository.save(Category.builder().categoryName("Cloths")
+                    .build());
             // Create some Product instances
 
             Product product1 = Product.builder()
@@ -53,7 +56,7 @@ public class DataInitializer {
             productItemsOne.add(productItem2);
 
 
-            productService.addProduct(product1,productItemsOne,1L);
+            productService.addProduct(product1,productItemsOne,1L , 1L);
 
 
             System.out.println("Data initialization completed.");

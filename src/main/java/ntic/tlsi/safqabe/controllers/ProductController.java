@@ -18,8 +18,12 @@ public class ProductController {
     private ProductServiceImpl productService ;
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product, @RequestBody Set<ProductItem> items ,@RequestBody Long supplierId) {
-        Product savedProduct = productService.addProduct(product, items,supplierId);
+    public ResponseEntity<Product> addProduct(
+            @RequestBody Product product,
+            @RequestBody Set<ProductItem> items ,
+            @RequestBody Long supplierId ,
+            @RequestBody Long categoryId) {
+        Product savedProduct = productService.addProduct(product, items,supplierId ,categoryId);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 

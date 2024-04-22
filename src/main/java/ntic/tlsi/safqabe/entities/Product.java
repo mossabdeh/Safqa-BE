@@ -24,6 +24,8 @@ public class Product {
 
     @ManyToOne
     private Supplier supplier;
+    @ManyToOne
+    private Category category;
 
     public Product(Long id, String productName, String description, double price, int quantity) {
         this.id = id;

@@ -1,8 +1,11 @@
 package ntic.tlsi.safqabe.services;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import ntic.tlsi.safqabe.entities.Category;
 import ntic.tlsi.safqabe.entities.Product;
 import ntic.tlsi.safqabe.entities.ProductItem;
 import ntic.tlsi.safqabe.entities.Supplier;
+import ntic.tlsi.safqabe.repositories.CategoryRepository;
 import ntic.tlsi.safqabe.repositories.ProductItemRepository;
 import ntic.tlsi.safqabe.repositories.ProductRepository;
 import ntic.tlsi.safqabe.repositories.SupplierRepository;
@@ -19,11 +22,17 @@ public class ProductServiceImpl implements ProductServiceInterface{
     private ProductRepository productRepository ;
     private ProductItemRepository productItemRepository;
     private SupplierRepository supplierRepository;
+    private CategoryRepository categoryRepository;
     @Override
-    public Product addProduct(Product product, Set<ProductItem> items, Long supplierId) {
-        Supplier supplier = supplierRepository.findById(supplierId).get();
+    public Product addProduct(Product product, Set<ProductItem> items, Long supplierId , Long categoryId) {
+        Supplier supplier = supplierRepository.findById(supplierId).orElseThrow(() ->
+                new EntityNotFoundException("Supplier with ID " + supplierId + " not found"));
+
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
+                new EntityNotFoundException("Category with ID " + categoryId + " not found"));
         product.setProductItems(items);
         product.setSupplier(supplier);
+        product.setCategory(category);
         items.forEach(item -> item.setProduct(product));
         return productRepository.save(product);
     }
