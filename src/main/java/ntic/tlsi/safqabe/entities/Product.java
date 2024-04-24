@@ -1,5 +1,6 @@
 package ntic.tlsi.safqabe.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,9 +23,11 @@ public class Product {
     @JsonManagedReference
     private Set<ProductItem> productItems = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Supplier supplier;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Category category;
 
     public Product(Long id, String productName, String description, double price, int quantity) {

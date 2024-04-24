@@ -1,5 +1,7 @@
 package ntic.tlsi.safqabe.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +15,8 @@ public class Category {
     private Long id ;
     private String categoryName;
     @OneToMany(mappedBy = "category")
-    private Set<Product> products = new HashSet<>();
+    @JsonBackReference
+    private Set<Product> products ;
 
     public Category(Long id, String name) {
         this.id = id;

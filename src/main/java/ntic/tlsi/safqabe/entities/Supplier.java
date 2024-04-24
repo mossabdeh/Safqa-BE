@@ -1,5 +1,7 @@
 package ntic.tlsi.safqabe.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +29,8 @@ public class Supplier {
     @Cascade(CascadeType.PERSIST)
     private Adress adress ;
     @OneToMany(mappedBy = "supplier")
-    private Set<Product> products = new HashSet<>();
+    @JsonBackReference
+    private Set<Product> products ;
 
     public Supplier(Long id, String fullName, String email, String phoneNumber, String encryptedPassword, String shopName, Adress adress) {
         this.id = id;
