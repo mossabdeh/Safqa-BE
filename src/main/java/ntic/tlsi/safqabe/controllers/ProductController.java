@@ -52,8 +52,9 @@ public class ProductController {
                 .collect(Collectors.toList());    }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return  productService.getProductById(id);
+    public ProductDto getProductById(@PathVariable Long id) {
+        Product productById = productService.getProductById(id);
+        return  convert2Dto(productById);
     }
 
     @PutMapping("/{id}")

@@ -39,7 +39,10 @@ public class DataInitializer {
                     .build();
 
             Product product2 = Product.builder()
-                    .productName("Iphone").description("Iphone Description ").price(299.99).quantity(150)
+                    .productName("jacket").description("jacket Description ").price(29.99).quantity(150)
+                    .build();
+            Product product3 = Product.builder()
+                    .productName("Pants").description("Pants Description ").price(29.99).quantity(150)
                     .build();
 
 
@@ -51,12 +54,29 @@ public class DataInitializer {
                     .name("T-shirt 2 ").image("https://assets.hermes.com/is/image/hermesproduct/t-shirt-broderie-h--072025HA01-worn-1-0-0-1000-1000_g.jpg")
                     .optionType(ProductOption.COLOR).build();
 
+            ProductItem productItem3 = ProductItem.builder()
+                    .name("jacket 1 ").image("https://www.masculin.com/wp-content/uploads/sites/2/2021/10/marques-de-vetements-homme.jpg")
+                    .optionType(ProductOption.SIZE).build();
+
+            ProductItem productItem4 = ProductItem.builder()
+                    .name("Pants ").image("https://i.ebayimg.com/images/g/puQAAOSwYVRhBxMV/s-l1200.webp")
+                    .optionType(ProductOption.SIZE).build();
+
             Set<ProductItem> productItemsOne = new HashSet<>();
             productItemsOne.add(productItem1);
             productItemsOne.add(productItem2);
 
+            Set<ProductItem> productItemstwo = new HashSet<>();
+            productItemstwo.add(productItem3);
+
+            Set<ProductItem> productItemsthree = new HashSet<>();
+            productItemsthree.add(productItem4);
+
 
             productService.addProduct(product1,productItemsOne,1L , 1L);
+            productService.addProduct(product2,productItemstwo,1L , 1L);
+            productService.addProduct(product3,productItemsthree,1L , 1L);
+
 
 
             System.out.println("Data initialization completed.");
