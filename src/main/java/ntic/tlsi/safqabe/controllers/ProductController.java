@@ -17,7 +17,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/products") // Base path for product-related endpoints
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
@@ -60,8 +60,10 @@ public class ProductController {
 
     // ... additional methods for product items (Optional)
 
-    @PostMapping("/products/{productId}/items")
-    public ResponseEntity<ProductItem> createProductItem(@PathVariable Long productId, @RequestBody ProductItemCreateDto productItemCreateDto) {
+    @PostMapping("/items")
+    public ResponseEntity<ProductItem> createProductItem(@RequestParam Long productId, @RequestBody ProductItemCreateDto productItemCreateDto) {
+        System.out.println("Received SKU: " + productItemCreateDto.getSKU());
+        System.out.println("Received POST request for product ID: " + productId + " with data: " + productItemCreateDto);
         // Convert DTO to ProductItem entity
         ProductItem productItem = productItemService.convert2Entity(productItemCreateDto);
         // Create the product item with associated variation options and get the saved entity

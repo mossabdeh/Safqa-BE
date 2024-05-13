@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/category")
 @AllArgsConstructor
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class CategoryController {
     private CategoryServiceImpl categoryService;
     private ModelMapper modelMapper;

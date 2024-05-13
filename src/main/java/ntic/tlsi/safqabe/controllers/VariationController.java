@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/variations")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class VariationController {
     @Autowired
     private  VariationService variationService;
