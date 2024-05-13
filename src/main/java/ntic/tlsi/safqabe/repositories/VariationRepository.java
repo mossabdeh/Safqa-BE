@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface VariationRepository extends JpaRepository<Variation, Long> {
-    @Query("SELECT v FROM Variation v JOIN FETCH v.variationOptions")
-    List<Variation> findAllVariationsWithOptions();
+
+        @Query("SELECT v FROM Variation v LEFT JOIN FETCH v.variationOptions")
+        List<Variation> findAllVariationsWithOptions();
+
 
 }

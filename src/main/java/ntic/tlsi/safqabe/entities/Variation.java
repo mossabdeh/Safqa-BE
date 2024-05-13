@@ -1,6 +1,7 @@
 package ntic.tlsi.safqabe.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -20,6 +21,7 @@ public class Variation {
 
     @OneToMany(mappedBy = "variation", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Manages serialization on the one-to-many side
+    //@JsonInclude(JsonInclude.Include.NON_EMPTY) // Ensure even empty collections are included in JSON
     private Set<VariationOption> variationOptions = new HashSet<>();
 
     public Variation(Long id, String name) {
