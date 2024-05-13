@@ -17,6 +17,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/products") // Base path for product-related endpoints
+@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
