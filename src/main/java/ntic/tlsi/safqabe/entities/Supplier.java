@@ -1,7 +1,6 @@
 package ntic.tlsi.safqabe.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +15,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,10 @@ public class Supplier {
     private String shopName;
     @OneToOne
     @Cascade(CascadeType.PERSIST)
+    @JsonIgnore
     private Adress adress ;
     @OneToMany(mappedBy = "supplier")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Product> products ;
 
     public Supplier(Long id, String fullName, String email, String phoneNumber, String encryptedPassword, String shopName, Adress adress) {

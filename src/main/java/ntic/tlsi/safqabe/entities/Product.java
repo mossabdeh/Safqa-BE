@@ -1,40 +1,35 @@
 package ntic.tlsi.safqabe.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
 
     private String productName;
     private String description;
-    private double price ;
-    private int quantity;
+    private String mainImage;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true , fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private Set<ProductItem> productItems = new HashSet<>();
+    // Removed productItems as it might not be needed for retrieving product variations
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY as it might not always be needed immediately
+    @JoinColumn(name = "supplier_id")
+    @JsonIgnore
     private Supplier supplier;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY as it might not always be needed immediately
+    @JoinColumn(name = "category_id")
+
     private Category category;
 
-    public Product(Long id, String productName, String description, double price, int quantity) {
+    public Product(Long id, String productName, String description, String mainImage) {
         this.id = id;
         this.productName = productName;
         this.description = description;
-        this.price = price;
-        this.quantity = quantity;
+        this.mainImage = mainImage;
     }
 }

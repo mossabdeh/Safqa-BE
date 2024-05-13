@@ -1,124 +1,82 @@
 package ntic.tlsi.safqabe.controllers;
 
-import lombok.AllArgsConstructor;
-import ntic.tlsi.safqabe.dtos.ProductDto;
-import ntic.tlsi.safqabe.dtos.ProductItemDto;
+import ntic.tlsi.safqabe.dtos.ProductCreateDto;
+import ntic.tlsi.safqabe.dtos.ProductGetDto;
+import ntic.tlsi.safqabe.dtos.ProductItemCreateDto;
 import ntic.tlsi.safqabe.entities.Product;
 import ntic.tlsi.safqabe.entities.ProductItem;
-import ntic.tlsi.safqabe.services.ProductServiceImpl;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
+import ntic.tlsi.safqabe.services.ProductItemService;
+import ntic.tlsi.safqabe.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
-@AllArgsConstructor
-@CrossOrigin("*")
+@RequestMapping("/api/products") // Base path for product-related endpoints
 public class ProductController {
-    private ProductServiceImpl productService ;
-    private ModelMapper modelMapper;
 
-    @PostMapping
-    public Product addProduct(
-            @RequestBody ProductDto productDto,
-            @RequestParam Long supplierId ,
-            @RequestParam Long categoryId) {
-        // Convert Set<ProductItemDto> to Set<ProductItem>
-        Set<ProductItem> productItems = new HashSet<>();
-        for (ProductItemDto itemDto : productDto.getProductItems()) {
-            ProductItem productItem = convert2Entity(itemDto);
-            productItems.add(productItem);
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductItemService productItemService;
+
+
+
+    @PostMapping // Handles POST requests for creating products
+    public ResponseEntity<ProductGetDto> createProduct(@RequestBody ProductCreateDto productCreateDto,
+                                                 @RequestParam(required = false) Long categoryId,
+                                                 @RequestParam(required = false) Long supplierId) {
+        Product product = productService.convert2Entity(productCreateDto); // Convert to Product entity
+        Product savedProduct = productService.saveProduct(product, categoryId, supplierId);
+        ProductGetDto getDto = productService.convert2GetDto(savedProduct); // Convert to DTO
+        return ResponseEntity.ok(getDto);
+    }
+
+    @GetMapping("/{id}") // Handles GET requests for a product by ID
+    public ResponseEntity<ProductGetDto> getProductById(@PathVariable Long id) {
+        Optional<ProductGetDto> productOptional = productService.getProductById(id);
+        if (productOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        Product converted = convert2Entity(productDto);
-        return productService.addProduct(converted, productItems,supplierId ,categoryId);
+        return ResponseEntity.ok(productOptional.get());
     }
 
-    @GetMapping
-    public List<Product> listProducts() {
-       return productService.listProducts();
-
+    @GetMapping // Handles GET requests for all products
+    public List<ProductGetDto> getAllProducts() {
+        return productService.getAllProducts();
     }
 
-    @GetMapping("/dto")
-    public List<ProductDto> listProductsDtos() {
-        List<Product> products = productService.listProducts();
-        return products.stream().map(this::convert2Dto)
-                .collect(Collectors.toList());    }
-
-    @GetMapping("/{id}")
-    public ProductDto getProductById(@PathVariable Long id) {
-        Product productById = productService.getProductById(id);
-        return  convert2Dto(productById);
+    @DeleteMapping("/{id}") // Handles DELETE requests for a product by ID
+    public ResponseEntity<Void> deleteProductById(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct, @RequestBody List<ProductItem> updatedItems) {
-        Product updated = productService.updateProduct(id, updatedProduct, updatedItems);
-        return updated != null
-                ? new ResponseEntity<>(updated, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // ... additional methods for product items (Optional)
+
+    @PostMapping("/products/{productId}/items")
+    public ResponseEntity<ProductItem> createProductItem(@PathVariable Long productId, @RequestBody ProductItemCreateDto productItemCreateDto) {
+        // Convert DTO to ProductItem entity
+        ProductItem productItem = productItemService.convert2Entity(productItemCreateDto);
+        // Create the product item with associated variation options and get the saved entity
+        Set<Long> variationOptionIds = productItemCreateDto.getVariationOptionIds(); // Assuming your DTO includes these
+        ProductItem savedItem = productItemService.createProductItem(productId, productItem, variationOptionIds);
+
+        return ResponseEntity.ok(savedItem);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    @GetMapping("/{productId}/items") // Handles GET requests for all product items of a product
+    public ResponseEntity<List<ProductItem>> getProductItems(@PathVariable Long productId) {
+        List<ProductItem> productItems = productItemService.getProductItemsByProductId(productId);
+        return ResponseEntity.ok(productItems);
     }
 
-    @GetMapping("/{productId}/items")
-    public ResponseEntity<Set<ProductItem>> getProductItemsByProductId(@PathVariable Long productId) {
-        Set<ProductItem> items = productService.getProductItemsByProductId(productId);
-        return items != null
-                ? new ResponseEntity<>(items, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("/{productId}/items")
-    public ResponseEntity<ProductItem> addProductItem(@PathVariable Long productId, @RequestBody ProductItem item) {
-        ProductItem savedItem = productService.addProductItem(productId, item);
-        return savedItem != null
-                ? new ResponseEntity<>(savedItem, HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PutMapping("/{productId}/items/{itemId}")
-    public ResponseEntity<ProductItem> updateProductItem(@PathVariable Long productId, @PathVariable Long itemId, @RequestBody ProductItem updatedItem) {
-        ProductItem updated = productService.updateProductItem(productId, itemId, updatedItem);
-        return updated != null
-                ? new ResponseEntity<>(updated, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/{productId}/items/{itemId}")
-    public ResponseEntity<Void> deleteProductItem(@PathVariable Long productId, @PathVariable Long itemId) {
-        productService.deleteProductItem(productId, itemId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private ProductDto convert2Dto (Product product){
-        ProductDto productDto = modelMapper.map(product , ProductDto.class);
-        return productDto ;
-    }
-
-    private Product convert2Entity(ProductDto productDto){
-        Product product = modelMapper.map(productDto ,Product.class );
-        return product;
-    }
-// ------------------- Product Item ---------------------------
-    private ProductItemDto convert2Dto (ProductItem productItem){
-        ProductItemDto productItemDto = modelMapper.map(productItem , ProductItemDto.class);
-        return productItemDto ;
-    }
-
-    private ProductItem convert2Entity(ProductItemDto productItemDto){
-        ProductItem productItem = modelMapper.map(productItemDto ,ProductItem.class );
-        return productItem;
-    }
-
+    // ... additional methods for managing product items (Optional)
 }
+

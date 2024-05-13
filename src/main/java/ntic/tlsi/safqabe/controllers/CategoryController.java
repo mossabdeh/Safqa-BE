@@ -2,9 +2,7 @@ package ntic.tlsi.safqabe.controllers;
 
 import lombok.AllArgsConstructor;
 import ntic.tlsi.safqabe.dtos.CategoryDto;
-import ntic.tlsi.safqabe.dtos.ProductDto;
 import ntic.tlsi.safqabe.entities.Category;
-import ntic.tlsi.safqabe.entities.Product;
 import ntic.tlsi.safqabe.services.CategoryServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
