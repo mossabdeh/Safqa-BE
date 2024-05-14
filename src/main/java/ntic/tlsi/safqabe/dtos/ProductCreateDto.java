@@ -14,4 +14,5 @@ public class ProductCreateDto {
     private String productName;
     private String description;
     private String mainImage;
+    public  double initialPrice;
 }

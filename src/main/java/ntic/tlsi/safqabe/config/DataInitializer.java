@@ -32,8 +32,8 @@ public class DataInitializer {
 
             // Create Product
             Product tShirt = productService.saveProduct(new Product(null, "Basic T-Shirt",
-                    "A plain t-shirt available in multiple sizes and colors.",
-                    null),1L,1L);
+                    "A plain t-shirt available in multiple sizes and colors.",null,
+                    20.00),1L,1L);
 
             // Create Variations
             Variation sizeVariation = variationService.createVariation("Size");

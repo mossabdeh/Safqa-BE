@@ -14,6 +14,7 @@ public class Product {
     private String productName;
     private String description;
     private String mainImage;
+    public  double initialPrice;
 
     // Removed productItems as it might not be needed for retrieving product variations
 
@@ -26,10 +27,11 @@ public class Product {
 
     private Category category;
 
-    public Product(Long id, String productName, String description, String mainImage) {
+    public Product(Long id, String productName, String description, String mainImage , double initialPrice) {
         this.id = id;
         this.productName = productName;
         this.description = description;
         this.mainImage = mainImage;
+        this.initialPrice = initialPrice;
     }
 }
