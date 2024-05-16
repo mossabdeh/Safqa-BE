@@ -4,14 +4,18 @@ import ntic.tlsi.safqabe.entities.*;
 import ntic.tlsi.safqabe.enums.RoleAdmin;
 import ntic.tlsi.safqabe.repositories.*;
 import ntic.tlsi.safqabe.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Component
 public class DataInitializer {
+    @Autowired
+    private PasswordEncoder passwordEncoder ;
     @Bean
     CommandLineRunner initData(AdminServiceImpl adminService, ClientServiceImpl clientService,
                                SupplierServiceImpl supplierService, AdressRepository adressRepository,
@@ -20,9 +24,9 @@ public class DataInitializer {
                                ProductItemService productItemService) {
         return args -> {
             // Create some users
-            adminService.saveAdmin(new Admin(null, "admin", "admin@gmail.com", "+213685894214", "admin", RoleAdmin.SUPER_ADMIN));
-            clientService.saveClient(new Client(null, "mossab", "mossab@gmail.com", "+213685894214", "mossab", null));
-            supplierService.saveSupplier(new Supplier(null, "seif", "seif@gmail.com", "+213685894214", "seif", "seifShope", null));
+            adminService.saveAdmin(new Admin(null, "admin", "admin@gmail.com", "+213685894214", passwordEncoder.encode("admin") , RoleAdmin.SUPER_ADMIN));
+            clientService.saveClient(new Client(null, "mossab", "mossab@gmail.com", "+213685894214", passwordEncoder.encode( "mossab"), null));
+            supplierService.saveSupplier(new Supplier(null, "seif", "seif@gmail.com", "+213685894214", passwordEncoder.encode("seif"), "seifShope", null));
 
             // Create address
             Adress adress = adressRepository.save(new Adress(null, "Constaintine", "el khroub", 25001L, "b test1 test2", ""));
