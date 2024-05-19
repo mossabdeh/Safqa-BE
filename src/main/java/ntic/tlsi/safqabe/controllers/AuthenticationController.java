@@ -4,6 +4,7 @@ import ntic.tlsi.safqabe.config.sec.CustomUserDetailsService;
 import ntic.tlsi.safqabe.dtos.AuthenticationRequest;
 import ntic.tlsi.safqabe.dtos.AuthenticationResponse;
 import ntic.tlsi.safqabe.dtos.RegisterRequest;
+import ntic.tlsi.safqabe.dtos.RegisterResponseDTO;
 import ntic.tlsi.safqabe.services.JwtUtil;
 import ntic.tlsi.safqabe.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api/authenticate")
@@ -45,8 +48,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponseDTO> registerUser(@RequestBody RegisterRequest registerRequest) {
         userService.registerUser(registerRequest);
-        return ResponseEntity.ok("User registered successfully");
+        RegisterResponseDTO response = new RegisterResponseDTO("User registered successfully");
+        return ResponseEntity.ok(response);
     }
+
+
 }
