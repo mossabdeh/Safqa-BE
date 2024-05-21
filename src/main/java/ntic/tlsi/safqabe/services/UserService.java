@@ -28,9 +28,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void registerUser(RegisterRequest registerRequest) {
+    public Long registerUser(RegisterRequest registerRequest) {
         String encryptedPassword = passwordEncoder.encode(registerRequest.getPassword());
-
+        Long userId = null;
         switch (registerRequest.getRole()) {
             case ADMIN:
                 Admin admin = new Admin();
@@ -40,6 +40,7 @@ public class UserService {
                 admin.setEncryptedPassword(encryptedPassword);
                 admin.setRoleAdmin(registerRequest.getAdminRole());
                 adminRepository.save(admin);
+                userId = admin.getId();
                 break;
             case CLIENT:
                 Client client = new Client();
@@ -48,6 +49,7 @@ public class UserService {
                 client.setPhoneNumber(registerRequest.getPhoneNumber());
                 client.setEncryptedPassword(encryptedPassword);
                 clientRepository.save(client);
+                userId = client.getId();
                 break;
             case SUPPLIER:
                 Supplier supplier = new Supplier();
@@ -56,9 +58,11 @@ public class UserService {
                 supplier.setPhoneNumber(registerRequest.getPhoneNumber());
                 supplier.setEncryptedPassword(encryptedPassword);
                 supplierRepository.save(supplier);
+                userId = supplier.getId();
                 break;
             default:
                 throw new IllegalArgumentException("Invalid role: " + registerRequest.getRole());
         }
+        return userId;
     }
 }

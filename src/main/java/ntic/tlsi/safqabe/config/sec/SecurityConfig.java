@@ -31,7 +31,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/authenticate/login","/api/products/**",
-                                "/category","/api/variations/details",
+                                "/category","/api/variations/details","/api/addresses/**",
                                 "/api/authenticate/register","/v3/api-docs/**",
                                 "/swagger-ui/**","/h2-console/**","/swagger-ui.html").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests

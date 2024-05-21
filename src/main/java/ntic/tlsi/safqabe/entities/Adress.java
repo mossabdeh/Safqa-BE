@@ -1,5 +1,6 @@
 package ntic.tlsi.safqabe.entities;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class Adress {
     private String address2;
 
     @ManyToMany(mappedBy = "adress")
+    @JsonIgnore
     private Set<Client> client = new HashSet<>();
 
     public Adress(Long id, String wilaya, String baladiya, Long codePostal, String address1, String address2) {

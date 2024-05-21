@@ -6,8 +6,10 @@ import lombok.Setter;
 @Getter  @Setter
 public class RegisterResponseDTO {
     private String message;
+    private Long id;
 
-    public RegisterResponseDTO(String message) {
+    public RegisterResponseDTO(Long id,String message) {
+        this.id = id ;
         this.message = message;
     }
 

@@ -49,10 +49,11 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponseDTO> registerUser(@RequestBody RegisterRequest registerRequest) {
-        userService.registerUser(registerRequest);
-        RegisterResponseDTO response = new RegisterResponseDTO("User registered successfully");
+        Long userId = userService.registerUser(registerRequest);
+        RegisterResponseDTO response = new RegisterResponseDTO(userId, "User registered successfully");
         return ResponseEntity.ok(response);
     }
+
 
 
 }
