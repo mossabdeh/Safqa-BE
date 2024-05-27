@@ -81,5 +81,14 @@ public class ProductController {
     }
 
     // ... additional methods for managing product items (Optional)
+    @GetMapping("/supplier/{supplierId}")
+    public List<ProductGetDto> getProductsBySupplierId(@PathVariable Long supplierId) {
+        return productService.getProductsBySupplierId(supplierId);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public List<ProductGetDto> getProductsByCategoryId(@PathVariable Long categoryId) {
+        return productService.getProductsByCategoryId(categoryId);
+    }
 }
 

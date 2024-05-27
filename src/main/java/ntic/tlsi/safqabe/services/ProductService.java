@@ -60,6 +60,25 @@ public class ProductService {
         }
         return productDtos;
     }
+    public List<ProductGetDto> getProductsBySupplierId(Long supplierId) {
+        List<Product> products = productRepository.findBySupplierId(supplierId);
+        List<ProductGetDto> productDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductGetDto productDto = modelMapper.map(product, ProductGetDto.class);
+            productDtos.add(productDto);
+        }
+        return productDtos;
+    }
+
+    public List<ProductGetDto> getProductsByCategoryId(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        List<ProductGetDto> productDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductGetDto productDto = modelMapper.map(product, ProductGetDto.class);
+            productDtos.add(productDto);
+        }
+        return productDtos;
+    }
 
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);

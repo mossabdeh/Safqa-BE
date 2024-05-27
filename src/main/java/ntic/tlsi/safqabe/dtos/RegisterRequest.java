@@ -16,8 +16,9 @@ public class RegisterRequest {
     private String password;
     private Role role;
     private RoleAdmin adminRole; // Specific role for admin (SUPER_ADMIN, PRODUCT_MANAGER, SOUS_ADMIN)
+    private String shopName; // Shop name for suppliers
 
-    // Constructor for clients and suppliers
+    // Constructor for clients
     public RegisterRequest(String fullName, String email, String phoneNumber, String password, Role role) {
         this.fullName = fullName;
         this.email = email;
@@ -34,5 +35,15 @@ public class RegisterRequest {
         this.password = password;
         this.role = role;
         this.adminRole = adminRole;
+    }
+
+    // Constructor for suppliers
+    public RegisterRequest(String fullName, String email, String phoneNumber, String password, Role role, String shopName) {
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.role = role;
+        this.shopName = shopName;
     }
 }

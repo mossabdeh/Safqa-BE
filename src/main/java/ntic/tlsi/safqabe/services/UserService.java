@@ -57,6 +57,7 @@ public class UserService {
                 supplier.setEmail(registerRequest.getEmail());
                 supplier.setPhoneNumber(registerRequest.getPhoneNumber());
                 supplier.setEncryptedPassword(encryptedPassword);
+                supplier.setShopName(registerRequest.getShopName());
                 supplierRepository.save(supplier);
                 userId = supplier.getId();
                 break;
