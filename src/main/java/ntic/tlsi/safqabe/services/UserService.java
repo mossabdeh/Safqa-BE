@@ -65,4 +65,20 @@ public class UserService {
         }
         return userId;
     }
+
+    public Long getUserIdByEmail(String email) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null) {
+            return admin.getId();
+        }
+        Client client = clientRepository.findByEmail(email);
+        if (client != null) {
+            return client.getId();
+        }
+        Supplier supplier = supplierRepository.findByEmail(email);
+        if (supplier != null) {
+            return supplier.getId();
+        }
+        return null;
+    }
 }
