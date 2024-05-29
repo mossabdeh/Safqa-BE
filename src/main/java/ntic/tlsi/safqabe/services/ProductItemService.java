@@ -59,6 +59,15 @@ public class ProductItemService {
         return productItemRepository.findByProductId(productId);
     }
 
+    // Add method to get the default product item by product ID
+    public ProductItem getDefaultProductItemByProductId(Long productId) {
+        List<ProductItem> productItems = productItemRepository.findByProductId(productId);
+        if (productItems.isEmpty()) {
+            throw new IllegalArgumentException("No product items found for product ID: " + productId);
+        }
+        return productItems.get(0);
+    }
+
     public void addProductValue(Long productItemId, VariationOption variationOption) {
         ProductItem productItem = getProductItemById(productItemId).orElseThrow();
         // productItem.setVariationOption(variationOption); // Assuming a Set for AttributeValues

@@ -90,5 +90,11 @@ public class ProductController {
     public List<ProductGetDto> getProductsByCategoryId(@PathVariable Long categoryId) {
         return productService.getProductsByCategoryId(categoryId);
     }
+
+    @GetMapping("/{productId}/default-item")
+    public ProductItem getDefaultProductItem(@PathVariable Long productId) {
+        return productItemService.getDefaultProductItemByProductId(productId);
+    }
+
 }
 

@@ -4,8 +4,10 @@ import ntic.tlsi.safqabe.dtos.ProductCreateDto;
 import ntic.tlsi.safqabe.dtos.ProductGetDto;
 import ntic.tlsi.safqabe.entities.Category;
 import ntic.tlsi.safqabe.entities.Product;
+import ntic.tlsi.safqabe.entities.ProductItem;
 import ntic.tlsi.safqabe.entities.Supplier;
 import ntic.tlsi.safqabe.repositories.CategoryRepository;
+import ntic.tlsi.safqabe.repositories.ProductItemRepository;
 import ntic.tlsi.safqabe.repositories.ProductRepository;
 import ntic.tlsi.safqabe.repositories.SupplierRepository;
 import org.modelmapper.ModelMapper;
@@ -22,10 +24,13 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private CategoryRepository categoryRepository; // New dependency
+    private CategoryRepository categoryRepository;
     @Autowired
-    private SupplierRepository supplierRepository; // New dependency
-    private final ModelMapper modelMapper = new ModelMapper(); // Create a ModelMapper instance
+    private SupplierRepository supplierRepository;
+    @Autowired
+    private ProductItemRepository productItemRepository;
+
+    private final ModelMapper modelMapper = new ModelMapper();
 
     public Product saveProduct(Product product, Long categoryId, Long supplierId) {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
@@ -41,11 +46,22 @@ public class ProductService {
         product.setCategory(category);
         product.setSupplier(supplier);
 
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+
+        // Create a default ProductItem
+        ProductItem defaultItem = new ProductItem();
+        defaultItem.setSKU("DEFAULT-SKU");
+        defaultItem.setImage(product.getMainImage());
+        defaultItem.setPrice(product.getInitialPrice());
+        defaultItem.setQuantity(0); // Initial quantity can be set to 0 or any default value
+        defaultItem.setProduct(savedProduct);
+
+        productItemRepository.save(defaultItem);
+
+        return savedProduct;
     }
 
     public Optional<ProductGetDto> getProductById(Long id) {
-        // Use JPA projection or custom query to fetch specific fields
         Product product = productRepository.findById(id).orElseThrow();
         ProductGetDto productDto = modelMapper.map(product, ProductGetDto.class);
         return Optional.of(productDto);
@@ -60,6 +76,7 @@ public class ProductService {
         }
         return productDtos;
     }
+
     public List<ProductGetDto> getProductsBySupplierId(Long supplierId) {
         List<Product> products = productRepository.findBySupplierId(supplierId);
         List<ProductGetDto> productDtos = new ArrayList<>();
@@ -80,13 +97,12 @@ public class ProductService {
         return productDtos;
     }
 
+
+
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
 
-    // Additional methods for specific search criteria, filtering, etc. (Optional)
-
-   // Mapper For Creating DTO
     public ProductCreateDto convert2Dto(Product product) {
         return modelMapper.map(product, ProductCreateDto.class);
     }
@@ -95,7 +111,6 @@ public class ProductService {
         return modelMapper.map(productCreateDto, Product.class);
     }
 
-    // Mapper For Getting DTO
     public ProductGetDto convert2GetDto(Product product) {
         return modelMapper.map(product, ProductGetDto.class);
     }
