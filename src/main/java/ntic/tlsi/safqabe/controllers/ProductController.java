@@ -52,7 +52,7 @@ public class ProductController {
 
     @GetMapping // Handles GET requests for all products
     public List<ProductGetDto> getAllProducts() {
-        return productService.getAllProducts();
+        return productService.getAllApprovedProducts();
     }
 
     @DeleteMapping("/{id}") // Handles DELETE requests for a product by ID
@@ -115,5 +115,16 @@ public class ProductController {
         return ResponseEntity.ok(productItem);
     }
 
+    @PutMapping("/approve/{productId}")
+    public ResponseEntity<ProductGetDto> approveProduct(@PathVariable Long productId) {
+        Product approvedProduct = productService.approveProduct(productId);
+        ProductGetDto productGetDto = productService.convert2GetDto(approvedProduct);
+        return ResponseEntity.ok(productGetDto);
+    }
+
+    @GetMapping("/pending")
+    public List<ProductGetDto> getAllUnapprovedProducts() {
+        return productService.getAllUnapprovedProducts();
+    }
 }
 

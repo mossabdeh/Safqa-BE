@@ -15,7 +15,7 @@ public class Product {
     private String description;
     private String mainImage;
     public  double initialPrice;
-
+    private Boolean approved = false; // New field
     // Removed productItems as it might not be needed for retrieving product variations
 
     @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY as it might not always be needed immediately

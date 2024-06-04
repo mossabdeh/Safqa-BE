@@ -15,6 +15,7 @@ public class ProductGetDto {
     private String description;
     private String mainImage;
     public  double initialPrice;
+    private Boolean approved;
     private Long categoryId; // retrieve category id
     private String categoryName; // Optional to include category name
     private Long supplierId;  // retrieve supplier id

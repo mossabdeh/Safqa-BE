@@ -45,6 +45,7 @@ public class ProductService {
 
         product.setCategory(category);
         product.setSupplier(supplier);
+        product.setApproved(false); // Set approved to false initially
 
         Product savedProduct = productRepository.save(product);
 
@@ -67,8 +68,8 @@ public class ProductService {
         return Optional.of(productDto);
     }
 
-    public List<ProductGetDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public List<ProductGetDto> getAllApprovedProducts() {
+        List<Product> products = productRepository.findAllByApproved(true);
         List<ProductGetDto> productDtos = new ArrayList<>();
         for (Product product : products) {
             ProductGetDto productDto = modelMapper.map(product, ProductGetDto.class);
@@ -76,6 +77,17 @@ public class ProductService {
         }
         return productDtos;
     }
+
+    public List<ProductGetDto> getAllUnapprovedProducts() {
+        List<Product> products = productRepository.findAllByApproved(false);
+        List<ProductGetDto> productDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductGetDto productDto = modelMapper.map(product, ProductGetDto.class);
+            productDtos.add(productDto);
+        }
+        return productDtos;
+    }
+
 
     public List<ProductGetDto> getProductsBySupplierId(Long supplierId) {
         List<Product> products = productRepository.findBySupplierId(supplierId);
@@ -97,7 +109,12 @@ public class ProductService {
         return productDtos;
     }
 
-
+    public Product approveProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        product.setApproved(true);
+        return productRepository.save(product);
+    }
 
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
