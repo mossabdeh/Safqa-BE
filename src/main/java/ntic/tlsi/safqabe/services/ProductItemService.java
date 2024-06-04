@@ -68,6 +68,29 @@ public class ProductItemService {
         return productItems.get(0);
     }
 
+    @Transactional
+    public ProductItem updateProductItem(Long productItemId, ProductItem updatedProductItem, Set<Long> variationOptionIds) {
+        ProductItem productItem = productItemRepository.findById(productItemId)
+                .orElseThrow(() -> new IllegalArgumentException("ProductItem not found with ID: " + productItemId));
+
+        // Update basic fields
+        productItem.setSKU(updatedProductItem.getSKU());
+        productItem.setImage(updatedProductItem.getImage());
+        productItem.setPrice(updatedProductItem.getPrice());
+        productItem.setQuantity(updatedProductItem.getQuantity());
+
+        // Handle multiple VariationOptions
+        if (variationOptionIds != null && !variationOptionIds.isEmpty()) {
+            Set<VariationOption> variationOptions = variationOptionIds.stream()
+                    .map(id -> variationOptionRepository.findById(id)
+                            .orElseThrow(() -> new IllegalArgumentException("VariationOption not found with ID: " + id)))
+                    .collect(Collectors.toSet());
+            productItem.setVariationOptions(variationOptions);
+        }
+
+        return productItemRepository.save(productItem);
+    }
+
     public void addProductValue(Long productItemId, VariationOption variationOption) {
         ProductItem productItem = getProductItemById(productItemId).orElseThrow();
         // productItem.setVariationOption(variationOption); // Assuming a Set for AttributeValues

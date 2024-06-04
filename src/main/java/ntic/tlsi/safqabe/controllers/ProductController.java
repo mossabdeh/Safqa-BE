@@ -1,5 +1,6 @@
 package ntic.tlsi.safqabe.controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import ntic.tlsi.safqabe.dtos.ProductCreateDto;
 import ntic.tlsi.safqabe.dtos.ProductGetDto;
 import ntic.tlsi.safqabe.dtos.ProductItemCreateDto;
@@ -11,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/api/products") // Base path for product-related endpoints
+@SecurityRequirement(name = "bearerAuth")
 //@CrossOrigin("*")
 public class ProductController {
 
@@ -100,6 +103,16 @@ public class ProductController {
     public ResponseEntity<ProductItem> getProductItemById(@PathVariable Long id) {
         Optional<ProductItem> productItem = productItemService.getProductItemById(id);
         return productItem.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/items/{productItemId}")
+    public ResponseEntity<ProductItem> updateProductItem(
+            @PathVariable Long productItemId,
+            @RequestBody ProductItemCreateDto productItemCreateDto) {
+        ProductItem updatedProductItem = productItemService.convert2Entity(productItemCreateDto);
+        Set<Long> variationOptionIds = new HashSet<>(productItemCreateDto.getVariationOptionIds());
+        ProductItem productItem = productItemService.updateProductItem(productItemId, updatedProductItem, variationOptionIds);
+        return ResponseEntity.ok(productItem);
     }
 
 }
