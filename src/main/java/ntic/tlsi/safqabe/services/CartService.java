@@ -4,6 +4,7 @@ import ntic.tlsi.safqabe.entities.Cart;
 import ntic.tlsi.safqabe.entities.CartItem;
 import ntic.tlsi.safqabe.entities.Client;
 import ntic.tlsi.safqabe.entities.ProductItem;
+import ntic.tlsi.safqabe.repositories.CartItemRepository;
 import ntic.tlsi.safqabe.repositories.CartRepository;
 import ntic.tlsi.safqabe.repositories.ClientRepository;
 import ntic.tlsi.safqabe.repositories.ProductItemRepository;
@@ -23,6 +24,8 @@ public class CartService {
 
     @Autowired
     private ProductItemRepository productItemRepository;
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     public Cart getCartByClientId(Long clientId) {
         return cartRepository.findByClientId(clientId);
@@ -63,36 +66,27 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public Cart removeFromCart(Long clientId, Long productItemId) {
-        Cart cart = cartRepository.findByClientId(clientId);
-        if (cart == null) {
-            throw new RuntimeException("Cart not found");
-        }
+    public Cart removeFromCart(Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
-        CartItem cartItem = cart.getItems().stream()
-                .filter(item -> item.getProductItem().getId().equals(productItemId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product item not found in cart"));
-
+        Cart cart = cartItem.getCart();
         cart.getItems().remove(cartItem);
+        cartItemRepository.delete(cartItem);
         cart.setTotalPrice(cart.getItems().stream().mapToDouble(CartItem::getPrice).sum());
         return cartRepository.save(cart);
     }
 
-    public Cart updateCartItem(Long clientId, Long productItemId, int quantity) {
-        Cart cart = cartRepository.findByClientId(clientId);
-        if (cart == null) {
-            throw new RuntimeException("Cart not found");
-        }
-
-        CartItem cartItem = cart.getItems().stream()
-                .filter(item -> item.getProductItem().getId().equals(productItemId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Product item not found in cart"));
+    public Cart updateCartItem(Long cartItemId, int quantity) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
         cartItem.setQuantity(quantity);
         cartItem.setPrice(cartItem.getProductItem().getPrice() * quantity);
+
+        Cart cart = cartItem.getCart();
         cart.setTotalPrice(cart.getItems().stream().mapToDouble(CartItem::getPrice).sum());
+        cartItemRepository.save(cartItem);
         return cartRepository.save(cart);
     }
 }

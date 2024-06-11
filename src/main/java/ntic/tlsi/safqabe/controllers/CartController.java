@@ -24,13 +24,13 @@ public class CartController {
         return cartService.addToCart(clientId, productItemId, quantity);
     }
 
-    @DeleteMapping("/{clientId}/remove")
-    public Cart removeFromCart(@PathVariable Long clientId, @RequestParam Long productItemId) {
-        return cartService.removeFromCart(clientId, productItemId);
+    @DeleteMapping("/{cartItemId}/remove")
+    public Cart removeFromCart(@PathVariable Long cartItemId) {
+        return cartService.removeFromCart(cartItemId);
     }
 
-    @PutMapping("/{clientId}/update")
-    public Cart updateCartItem(@PathVariable Long clientId, @RequestParam Long productItemId, @RequestParam int quantity) {
-        return cartService.updateCartItem(clientId, productItemId, quantity);
+    @PutMapping("/{cartItemId}/update")
+    public Cart updateCartItem(@PathVariable Long cartItemId, @RequestParam int quantity) {
+        return cartService.updateCartItem(cartItemId, quantity);
     }
 }
