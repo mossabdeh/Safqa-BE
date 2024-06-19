@@ -1,5 +1,6 @@
 package ntic.tlsi.safqabe.controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import ntic.tlsi.safqabe.dtos.CategoryDto;
 import ntic.tlsi.safqabe.entities.Category;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/category")
 @AllArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 //@CrossOrigin("*")
 public class CategoryController {
     private CategoryServiceImpl categoryService;

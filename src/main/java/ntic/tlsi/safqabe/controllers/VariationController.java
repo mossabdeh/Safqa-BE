@@ -1,6 +1,7 @@
 package ntic.tlsi.safqabe.controllers;
 
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import ntic.tlsi.safqabe.entities.Variation;
 
 import ntic.tlsi.safqabe.entities.VariationOption;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/variations")
+@SecurityRequirement(name = "bearerAuth")
 //@CrossOrigin("*")
 public class VariationController {
     @Autowired
@@ -29,9 +31,16 @@ public class VariationController {
 
     // Endpoint to create a new variation
     @PostMapping
-    public ResponseEntity<Variation> createVariation(@RequestParam String name) {
-        Variation variation = variationService.createVariation(name);
+    public ResponseEntity<Variation> createVariation(@RequestParam String name, @RequestParam Long categoryId) {
+        Variation variation = variationService.createVariation(name, categoryId);  // Add categoryId parameter
         return ResponseEntity.status(HttpStatus.CREATED).body(variation);
+    }
+
+    // Endpoint to find variations by category
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Variation>> getVariationsByCategory(@PathVariable Long categoryId) {
+        List<Variation> variations = variationService.findVariationsByCategory(categoryId);
+        return ResponseEntity.ok(variations);
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -25,7 +26,7 @@ public class DataInitializer {
                                ProductItemService productItemService) {
         return args -> {
             // Create some users
-            adminService.saveAdmin(new Admin(null, "admin", "admin@gmail.com", "+213685894214", passwordEncoder.encode("admin"), RoleAdmin.SUPER_ADMIN));
+           /* adminService.saveAdmin(new Admin(null, "admin", "admin@gmail.com", "+213685894214", passwordEncoder.encode("admin"), RoleAdmin.SUPER_ADMIN));
             clientService.saveClient(new Client(null, "mossab", "mossab@gmail.com", "+213685894214", passwordEncoder.encode("mossab"), null));
             supplierService.saveSupplier(new Supplier(null, "seif", "seif@gmail.com", "+213685894214", passwordEncoder.encode("seif"), "seifShope", null));
 
@@ -70,6 +71,9 @@ public class DataInitializer {
             productItemService.createProductItem(2L, mediumBlueTShirt, Set.of(medium.getId(), blue.getId()));
             productItemService.createProductItem(3L, smallJeans, Set.of(small.getId(), blue.getId()));
 
+            List<Variation> list = variationService.test();
+           System.out.println(list.get(4).getName());
+           */
             System.out.println("Data initialization completed.");
         };
     }

@@ -14,4 +14,6 @@ public class VariationDetailDTO {
     private String variationName;
     private Long variationOptionId;
     private String variationOptionValue;
+    private Long categoryId;           // Add this field
+    private String categoryName;       // Add this field
 }
